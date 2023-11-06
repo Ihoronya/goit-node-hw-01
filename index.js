@@ -1,0 +1,27 @@
+import * as contactService from './contacts.js';
+import yargs from 'yargs';
+
+const invokeAction = async ({ action, id, name, email, phone }) => {
+  switch (action) {
+    case 'list':
+      const allContact = await contactService.listContacts();
+      return console.table(allContact);
+    case 'get':
+      const oneContact = await contactService.getContactById(id);
+      return console.log(oneContact);
+    case 'add':
+      const newContact = await contactService.addContact({
+        name,
+        email,
+        phone,
+      });
+      return console.log(newContact);
+    case 'remove':
+      const deleteContact = await contactService.removeContact(id);
+      return console.log(deleteContact);
+    default:
+      console.warn('\x1B[31m Unknow action type!');
+  }
+};
+const { argv } = yargs(process.argv.slice(2));
+invokeAction(argv);
